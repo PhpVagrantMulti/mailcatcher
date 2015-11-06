@@ -22,7 +22,7 @@
 # along with PhpVagrantMulti.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-%w{libsqlite3-dev ruby1.9.1-dev}.each do |pkg|
+%w{libsqlite3-dev ruby1.9.1-dev ruby2.0-dev}.each do |pkg|
     package pkg do
         action :install
     end
