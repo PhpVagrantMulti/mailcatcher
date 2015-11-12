@@ -22,34 +22,40 @@
 # along with PhpVagrantMulti.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-%w{libsqlite3-dev ruby1.9.1-dev ruby2.0-dev}.each do |pkg|
+%w{libsqlite3-dev ruby1.9.1 ruby1.9.1-dev g++}.each do |pkg|
     package pkg do
         action :install
     end
-end
-
-execute "import_rvm_gpg" do
-  command "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
-end
-
-execute "install_rvm" do 
-  command "\\curl -sSL https://get.rvm.io | bash -s stable --ruby && source /home/vagrant/.rvm/scripts/rvm"
-end
-
-execute "install_ruby" do
-  command "rvm install 2.1.1"
 end
 
 gem_package "mailcatcher" do
     action :install
 end
 
-cookbook_file '/home/vagrant/run_mailcatcher.sh' do
-  source 'run_mailcatcher.sh'
-  owner 'vagrant'
-  group 'vagrant'
-  mode '0755'
+execute "update_alternatives_ruby" do
+    command "update-alternatives --set ruby /usr/bin/ruby1.9.1"
+    action :run
+    only_if do ::File.exists?('/usr/bin/ruby1.8') end
+end
+
+execute "update_alternatives_gem" do
+    command "update-alternatives --set gem /usr/bin/gem1.9.1"
+    action :run
+    only_if do ::File.exists?('/usr/bin/ruby1.8') end
+end
+
+cookbook_file '/etc/init/mailcatcher.conf' do
+  source 'mailcatcher.conf'
+  owner 'root'
+  group 'root'
+  mode '0644'
   action :create
+end
+
+service 'mailcatcher' do
+  provider Chef::Provider::Service::Upstart
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
 end
 
 file "/etc/php5/mods-available/sendmail_override.conf" do
