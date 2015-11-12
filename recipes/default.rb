@@ -28,18 +28,6 @@
     end
 end
 
-execute "import_rvm_gpg" do
-  command "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
-end
-
-execute "install_rvm" do 
-  command "\\curl -sSL https://get.rvm.io | bash -s stable --ruby && source /home/vagrant/.rvm/scripts/rvm"
-end
-
-execute "install_ruby" do
-  command "rvm install 2.1.1"
-end
-
 gem_package "mailcatcher" do
     action :install
 end
