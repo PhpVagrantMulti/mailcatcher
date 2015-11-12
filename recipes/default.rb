@@ -3,7 +3,7 @@
 # Installs and configures mailcatcher on the development vm
 # Cookbook Name:: mailcatcher
 # Recipe:: default
-# AUTHORS::   Seth Griffin <griffinseth@yahoo.com>
+# AUTHORS::   Seth Griffin <griffinseth@yahoo.com> Ryan Cavicchioni <rcavicchioni@gmail.com>
 # Copyright:: Copyright 2015 Authors
 # License::   GPLv3
 #
