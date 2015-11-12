@@ -32,6 +32,18 @@ gem_package "mailcatcher" do
     action :install
 end
 
+execute "update_alternatives_ruby" do
+    command "update-alternatives --set ruby /usr/bin/ruby1.9.1"
+    action :run
+    only_if do ::File.exists?('/usr/bin/ruby1.8') end
+end
+
+execute "update_alternatives_gem" do
+    command "update-alternatives --set gem /usr/bin/gem1.9.1"
+    action :run
+    only_if do ::File.exists?('/usr/bin/ruby1.8') end
+end
+
 cookbook_file '/home/vagrant/run_mailcatcher.sh' do
   source 'run_mailcatcher.sh'
   owner 'vagrant'
