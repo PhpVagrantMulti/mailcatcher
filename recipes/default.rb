@@ -44,12 +44,18 @@ execute "update_alternatives_gem" do
     only_if do ::File.exists?('/usr/bin/ruby1.8') end
 end
 
-cookbook_file '/home/vagrant/run_mailcatcher.sh' do
-  source 'run_mailcatcher.sh'
-  owner 'vagrant'
-  group 'vagrant'
-  mode '0755'
+cookbook_file '/etc/init/mailcatcher.conf' do
+  source 'mailcatcher.conf'
+  owner 'root'
+  group 'root'
+  mode '0644'
   action :create
+end
+
+service 'mailcatcher' do
+  provider Chef::Provider::Service::Upstart
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
 end
 
 file "/etc/php5/mods-available/sendmail_override.conf" do
